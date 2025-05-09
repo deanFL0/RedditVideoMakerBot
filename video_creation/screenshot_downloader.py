@@ -177,12 +177,12 @@ def get_screenshots_of_reddit_posts(reddit_object: dict, screenshot_num: int):
                 # zoom the body of the page
                 page.evaluate("document.body.style.zoom=" + str(zoom))
                 # as zooming the body doesn't change the properties of the divs, we need to adjust for the zoom
-                location = page.locator('[data-test-id="post-content"]').bounding_box()
+                location = page.locator(f'shreddit-post[id="t3_{reddit_id}"]').bounding_box()
                 for i in location:
                     location[i] = float("{:.2f}".format(location[i] * zoom))
-                page.screenshot(clip=location, path=postcontentpath)
+                page.screenshot(clip=location, path=postcontentpath, timeout=0)
             else:
-                page.locator('[data-test-id="post-content"]').screenshot(path=postcontentpath)
+                page.locator(f'shreddit-post[id="t3_{reddit_id}"]').screenshot(path=postcontentpath, timeout=0)
         except Exception as e:
             print_substep("Something went wrong!", style="red")
             resp = input(
@@ -241,9 +241,9 @@ def get_screenshots_of_reddit_posts(reddit_object: dict, screenshot_num: int):
                         # zoom the body of the page
                         page.evaluate("document.body.style.zoom=" + str(zoom))
                         # scroll comment into view
-                        page.locator(f"#t1_{comment['comment_id']}").scroll_into_view_if_needed()
+                        page.locator(f"#t1_{comment['comment_id']}-comment-rtjson-content").scroll_into_view_if_needed()
                         # as zooming the body doesn't change the properties of the divs, we need to adjust for the zoom
-                        location = page.locator(f"#t1_{comment['comment_id']}").bounding_box()
+                        location = page.locator(f"#t1_{comment['comment_id']}-comment-rtjson-content").bounding_box()
                         for i in location:
                             location[i] = float("{:.2f}".format(location[i] * zoom))
                         page.screenshot(
@@ -251,7 +251,7 @@ def get_screenshots_of_reddit_posts(reddit_object: dict, screenshot_num: int):
                             path=f"assets/temp/{reddit_id}/png/comment_{idx}.png",
                         )
                     else:
-                        page.locator(f"#t1_{comment['comment_id']}").screenshot(
+                        page.locator(f"#t1_{comment['comment_id']}-comment-rtjson-content").screenshot(
                             path=f"assets/temp/{reddit_id}/png/comment_{idx}.png"
                         )
                 except TimeoutError:

@@ -1,5 +1,5 @@
 @echo off
-set VENV_DIR=.venv
+set VENV_DIR=venv
 
 if exist "%VENV_DIR%" (
     echo Activating virtual environment...
